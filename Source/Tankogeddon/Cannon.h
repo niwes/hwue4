@@ -32,6 +32,9 @@ protected:
     float FireDamage = 1;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+    bool bHasSpecialFire = false;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
     ECannonType Type = ECannonType::FireProjectile;
 
     FTimerHandle ReloadTimerHandle;
@@ -42,8 +45,10 @@ public:
     ACannon();
 
     void Fire();
+    void FireSpecial();
 
-    bool IsReadyToFire();
+    bool IsReadyToFire() const;
+    bool HasSpecialFire() const;
 
 protected:
     virtual void BeginPlay() override;

@@ -46,9 +46,35 @@ void ACannon::Fire()
     GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
 }
 
-bool ACannon::IsReadyToFire()
+void ACannon::FireSpecial()
+{
+    if (!bHasSpecialFire || !bReadyToFire)
+    {
+        return;
+    }
+
+    bReadyToFire = false;
+
+    if (Type == ECannonType::FireProjectile)
+    {
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire special - projectile");
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire special - trace");
+    }
+
+    GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+}
+
+bool ACannon::IsReadyToFire() const
 {
     return bReadyToFire;
+}
+
+bool ACannon::HasSpecialFire() const
+{
+    return bHasSpecialFire;
 }
 
 // Called when the game starts or when spawned
