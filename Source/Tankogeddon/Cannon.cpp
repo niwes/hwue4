@@ -9,6 +9,8 @@
 #include <TimerManager.h>
 #include <Engine/World.h>
 
+#include "Tankogeddon.h"
+
 // Sets default values
 ACannon::ACannon()
 {
@@ -27,44 +29,48 @@ ACannon::ACannon()
 
 void ACannon::Fire()
 {
-    if (!bReadyToFire)
+    if (!bReadyToFire || NumAmmo <= 0)
     {
         return;
     }
 
     bReadyToFire = false;
-
+    --NumAmmo;
+    
     if (Type == ECannonType::FireProjectile)
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - projectile");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire - projectile"));
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire - trace"));
     }
 
     GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+    UE_LOG(LogTankogeddon, Log, TEXT("Fire! Ammo left: %d"), NumAmmo);
 }
 
 void ACannon::FireSpecial()
 {
-    if (!bHasSpecialFire || !bReadyToFire)
+    if (!bHasSpecialFire || !bReadyToFire || NumAmmo <= 0)
     {
         return;
     }
 
     bReadyToFire = false;
+    --NumAmmo;
 
     if (Type == ECannonType::FireProjectile)
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire special - projectile");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire special - projectile"));
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire special - trace");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire special - trace"));
     }
 
     GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+    UE_LOG(LogTankogeddon, Log, TEXT("FireSpecial! Ammo left: %d"), NumAmmo);
 }
 
 bool ACannon::IsReadyToFire() const
@@ -83,6 +89,7 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 	
     bReadyToFire = true;
+    NumAmmo = MaxAmmo;
 }
 
 void ACannon::EndPlay(const EEndPlayReason::Type EndPlayReason)
