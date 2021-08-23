@@ -16,6 +16,7 @@ void ATankPlayerController::SetupInputComponent()
     InputComponent->BindAxis("MoveForward", this, &ATankPlayerController::MoveForward);
     InputComponent->BindAxis("RotateRight", this, &ATankPlayerController::RotateRight);
     InputComponent->BindAction("Fire",IE_Pressed, this, &ATankPlayerController::Fire);
+    InputComponent->BindAction("FireSpecial",IE_Pressed, this, &ATankPlayerController::FireSpecial);
 }
 
 void ATankPlayerController::Tick(float DeltaTime)
@@ -54,4 +55,9 @@ void ATankPlayerController::RotateRight(float AxisValue)
 void ATankPlayerController::Fire()
 {
     TankPawn->Fire();
+}
+
+void ATankPlayerController::FireSpecial()
+{
+    TankPawn->FireSpecial();
 }

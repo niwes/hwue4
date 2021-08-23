@@ -52,6 +52,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
     float MoveSpeed = 100.f;
     
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
+    float MovementSmootheness = 0.1f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
     float RotationSpeed = 100.f;
 
@@ -59,7 +62,7 @@ protected:
     float RotationSmootheness = 0.1f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
-    float TurretRotationSmootheness = 0.5f;
+    float TurretRotationSpeed = 0.5f;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -73,8 +76,12 @@ public:
     UFUNCTION()
     void Fire();
 
+    UFUNCTION()
+    void FireSpecial();
+
 private:
     float TargetForwardAxisValue = 0.f;
+    float CurrentForwardAxisValue = 0.f;
     float TargetRightAxisValue = 0.f;
     float CurrentRightAxisValue = 0.f;
 

@@ -9,6 +9,8 @@
 #include <TimerManager.h>
 #include <Engine/World.h>
 
+#include "Tankogeddon.h"
+
 // Sets default values
 ACannon::ACannon()
 {
@@ -27,28 +29,50 @@ ACannon::ACannon()
 
 void ACannon::Fire()
 {
-    if (!bReadyToFire)
+    if (!IsReadyToFire())
     {
         return;
     }
 
     bReadyToFire = false;
+    --NumAmmo;
+    ShotsLeft = NumShotsInSeries;
+    Shot();
+    
+    UE_LOG(LogTankogeddon, Log, TEXT("Fire! Ammo left: %d"), NumAmmo);
+}
+
+void ACannon::FireSpecial()
+{
+    if (!HasSpecialFire() || !IsReadyToFire())
+    {
+        return;
+    }
+
+    bReadyToFire = false;
+    --NumAmmo;
 
     if (Type == ECannonType::FireProjectile)
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - projectile");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire special - projectile"));
     }
     else
     {
-        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, "Fire - trace");
+        GEngine->AddOnScreenDebugMessage(10, 1, FColor::Green, TEXT("Fire special - trace"));
     }
 
     GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+    UE_LOG(LogTankogeddon, Log, TEXT("FireSpecial! Ammo left: %d"), NumAmmo);
 }
 
-bool ACannon::IsReadyToFire()
+bool ACannon::IsReadyToFire() const
 {
-    return bReadyToFire;
+    return bReadyToFire && NumAmmo > 0 && ShotsLeft == 0;
+}
+
+bool ACannon::HasSpecialFire() const
+{
+    return bHasSpecialFire;
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +81,8 @@ void ACannon::BeginPlay()
 	Super::BeginPlay();
 	
     bReadyToFire = true;
+    ShotsLeft = 0;
+    NumAmmo = MaxAmmo;
 }
 
 void ACannon::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -64,9 +90,33 @@ void ACannon::EndPlay(const EEndPlayReason::Type EndPlayReason)
     Super::EndPlay(EndPlayReason);
 
     GetWorld()->GetTimerManager().ClearTimer(ReloadTimerHandle);
+    GetWorld()->GetTimerManager().ClearTimer(SeriesTimerHandle);
 }
 
 void ACannon::Reload()
 {
     bReadyToFire = true;
+}
+
+void ACannon::Shot()
+{
+    check(ShotsLeft > 0)
+    if (Type == ECannonType::FireProjectile)
+    {
+        GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, TEXT("Fire - projectile"));
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(INDEX_NONE, 1, FColor::Green, TEXT("Fire - trace"));
+    }
+
+    if (--ShotsLeft > 0)
+    {
+        const float NextShotTime = SeriesLength / (NumShotsInSeries - 1);
+        GetWorld()->GetTimerManager().SetTimer(SeriesTimerHandle, this, &ACannon::Shot, NextShotTime, false);
+    }
+    else
+    {
+        GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &ACannon::Reload, 1.f / FireRate, false);
+    }
 }
