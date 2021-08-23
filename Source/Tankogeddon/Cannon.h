@@ -9,6 +9,7 @@
 
 class UStaticMeshComponent;
 class UArrowComponent;
+class AProjectile;
 
 UCLASS()
 class TANKOGEDDON_API ACannon : public AActor
@@ -21,6 +22,9 @@ protected:
     
     UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
     UArrowComponent* ProjectileSpawnPoint;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
+    TSubclassOf<AProjectile> ProjectileClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Fire params")
     float FireRate = 1.f;
