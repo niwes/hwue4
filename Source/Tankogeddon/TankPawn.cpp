@@ -79,15 +79,16 @@ void ATankPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
     // Tank movement
+    CurrentForwardAxisValue = FMath::FInterpTo(CurrentForwardAxisValue, TargetForwardAxisValue, DeltaTime, MovementSmootheness);
+    
     FVector CurrentLocation = GetActorLocation();
     FVector ForwardVector = GetActorForwardVector();
-    FVector RightVector = GetActorRightVector();
-    FVector MovePosition = CurrentLocation + ForwardVector * TargetForwardAxisValue * MoveSpeed * DeltaTime;
+    FVector MovePosition = CurrentLocation + ForwardVector * CurrentForwardAxisValue * MoveSpeed * DeltaTime;
 
     SetActorLocation(MovePosition, true);
 
     // Tank rotation
-    CurrentRightAxisValue = FMath::Lerp(CurrentRightAxisValue, TargetRightAxisValue, RotationSmootheness);
+    CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRightAxisValue, DeltaTime, RotationSmootheness);
 
     UE_LOG(LogTankogeddon, Verbose, TEXT("CurrentRightAxisValue = %f TargetRightAxisValue = %f"), CurrentRightAxisValue, TargetRightAxisValue);
 
@@ -106,7 +107,7 @@ void ATankPawn::Tick(float DeltaTime)
         FRotator CurrRotation = TurretMesh->GetComponentRotation();
         TargetRotation.Pitch = CurrRotation.Pitch;
         TargetRotation.Roll = CurrRotation.Roll;
-        TurretMesh->SetWorldRotation(FMath::Lerp(CurrRotation, TargetRotation, TurretRotationSmootheness));
+        TurretMesh->SetWorldRotation(FMath::RInterpConstantTo(CurrRotation, TargetRotation, DeltaTime, TurretRotationSpeed));
     }
 }
 
