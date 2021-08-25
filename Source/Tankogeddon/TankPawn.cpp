@@ -87,6 +87,11 @@ void ATankPawn::CycleCannon()
     }
 }
 
+ACannon* ATankPawn::GetActiveCannon() const
+{
+    return ActiveCannon;
+}
+
 // Called every frame
 void ATankPawn::Tick(float DeltaTime)
 {

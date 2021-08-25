@@ -84,6 +84,9 @@ public:
     UFUNCTION()
     void CycleCannon();
 
+    UFUNCTION()
+    ACannon* GetActiveCannon() const;
+
 private:
     float TargetForwardAxisValue = 0.f;
     float CurrentForwardAxisValue = 0.f;

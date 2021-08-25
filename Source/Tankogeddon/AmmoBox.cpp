@@ -7,6 +7,7 @@
 #include "TankPawn.h"
 #include <GameFramework/Controller.h>
 #include <Engine/World.h>
+#include "Cannon.h"
 
 // Sets default values
 AAmmoBox::AAmmoBox()
@@ -31,7 +32,16 @@ void AAmmoBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* O
     ATankPawn* PlayerPawn = Cast<ATankPawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
     if (OtherActor == PlayerPawn)
     {
-        PlayerPawn->SetupCannon(CannonClass);
+        ACannon* Cannon = PlayerPawn->GetActiveCannon();
+        if (Cannon && Cannon->GetClass() == CannonClass)
+        {
+            Cannon->AddAmmo(NumAmmo);
+        }
+        else
+        {
+            PlayerPawn->SetupCannon(CannonClass);
+        }
+        
         Destroy();
     }
 

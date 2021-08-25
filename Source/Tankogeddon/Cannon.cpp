@@ -83,6 +83,12 @@ void ACannon::SetVisibility(bool bIsVisible)
     Mesh->SetHiddenInGame(!bIsVisible);
 }
 
+void ACannon::AddAmmo(int32 InNumAmmo)
+{
+    NumAmmo = FMath::Clamp(NumAmmo + InNumAmmo, 0, MaxAmmo);
+    UE_LOG(LogTankogeddon, Log, TEXT("AddAmmo(%d)! NumAmmo: %d"), InNumAmmo, NumAmmo);
+}
+
 // Called when the game starts or when spawned
 void ACannon::BeginPlay()
 {
