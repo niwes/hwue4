@@ -64,6 +64,8 @@ public:
     bool IsReadyToFire() const;
     bool HasSpecialFire() const;
 
+    void SetVisibility(bool bIsVisible);
+
 protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

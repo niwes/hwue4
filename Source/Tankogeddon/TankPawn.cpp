@@ -60,17 +60,31 @@ void ATankPawn::BeginPlay()
 
 void ATankPawn::SetupCannon(TSubclassOf<ACannon> InCannonClass)
 {
-    if (Cannon)
+    if (ActiveCannon)
     {
-        Cannon->Destroy();
-        Cannon = nullptr;
+        ActiveCannon->Destroy();
+        ActiveCannon = nullptr;
     }
 
     FActorSpawnParameters Params;
     Params.Instigator = this;
     Params.Owner = this;
-    Cannon = GetWorld()->SpawnActor<ACannon>(InCannonClass, Params);
-    Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    ActiveCannon = GetWorld()->SpawnActor<ACannon>(InCannonClass, Params);
+    ActiveCannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void ATankPawn::CycleCannon()
+{
+    Swap(ActiveCannon, InactiveCannon);
+    if (ActiveCannon)
+    {
+        ActiveCannon->SetVisibility(true);
+    }
+
+    if (InactiveCannon)
+    {
+        InactiveCannon->SetVisibility(false);
+    }
 }
 
 // Called every frame
@@ -113,17 +127,17 @@ void ATankPawn::Tick(float DeltaTime)
 
 void ATankPawn::Fire()
 {
-    if (Cannon)
+    if (ActiveCannon)
     {
-        Cannon->Fire();
+        ActiveCannon->Fire();
     }
 }
 
 void ATankPawn::FireSpecial()
 {
-    if (Cannon)
+    if (ActiveCannon)
     {
-        Cannon->FireSpecial();
+        ActiveCannon->FireSpecial();
     }
 }
 

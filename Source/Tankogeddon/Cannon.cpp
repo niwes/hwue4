@@ -24,6 +24,7 @@ ACannon::ACannon()
 
     Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Cannon mesh"));
     Mesh->SetupAttachment(RootComponent);
+    Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     ProjectileSpawnPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn point"));
     ProjectileSpawnPoint->SetupAttachment(Mesh);
@@ -75,6 +76,11 @@ bool ACannon::IsReadyToFire() const
 bool ACannon::HasSpecialFire() const
 {
     return bHasSpecialFire;
+}
+
+void ACannon::SetVisibility(bool bIsVisible)
+{
+    Mesh->SetHiddenInGame(!bIsVisible);
 }
 
 // Called when the game starts or when spawned

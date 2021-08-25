@@ -81,6 +81,9 @@ public:
     UFUNCTION()
     void SetupCannon(TSubclassOf<ACannon> InCannonClass);
 
+    UFUNCTION()
+    void CycleCannon();
+
 private:
     float TargetForwardAxisValue = 0.f;
     float CurrentForwardAxisValue = 0.f;
@@ -91,5 +94,8 @@ private:
     ATankPlayerController* TankController;
 
     UPROPERTY()
-    ACannon* Cannon;
+    ACannon* ActiveCannon;
+
+    UPROPERTY()
+    ACannon* InactiveCannon;
 };
