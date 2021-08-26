@@ -31,11 +31,13 @@ protected:
 
 
     FTimerHandle MovementTimerHandle;
+    FVector StartLocation;
 
 public:
     AProjectile();
 
     void Start();
+    void Stop();
 
 protected:
     UFUNCTION()
