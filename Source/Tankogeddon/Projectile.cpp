@@ -9,6 +9,8 @@
 
 #include "Tankogeddon.h"
 #include "ActorPoolSubsystem.h"
+#include "DamageTaker.h"
+#include "GameStructs.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -50,10 +52,24 @@ void AProjectile::Stop()
 void AProjectile::OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     UE_LOG(LogTankogeddon, Warning, TEXT("Projectile %s collided with %s. "), *GetName(), *OtherActor->GetName());
+    
     if (OtherComp && OtherComp->GetCollisionObjectType() == ECollisionChannel::ECC_Destructible)
     {
         OtherActor->Destroy();
     }
+    else if (IDamageTaker* DamageTaker = Cast<IDamageTaker>(OtherActor))
+    {
+        AActor* MyInstigator = GetInstigator();
+        if (OtherActor != MyInstigator)
+        {
+            FDamageData DamageData;
+            DamageData.DamageValue = Damage;
+            DamageData.DamageMaker = this;
+            DamageData.Instigator = MyInstigator;
+            DamageTaker->TakeDamage(DamageData);
+        }
+    }
+
     Stop();
 }
 

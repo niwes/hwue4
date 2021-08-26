@@ -125,6 +125,7 @@ void ACannon::Shot()
         AProjectile* Projectile = Cast<AProjectile>(Pool->RetreiveActor(ProjectileClass, SpawnTransform));
         if (Projectile)
         {
+            Projectile->SetInstigator(GetInstigator());
             Projectile->Start();
         }
     }
