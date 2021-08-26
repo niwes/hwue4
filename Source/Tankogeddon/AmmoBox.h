@@ -21,6 +21,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
     TSubclassOf<ACannon> CannonClass;
 
+    /** Will add specified amount if tank already has cannon of class, specified in CannonClass */
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo")
+    int32 NumAmmo;
+
 public:
     AAmmoBox();
 
