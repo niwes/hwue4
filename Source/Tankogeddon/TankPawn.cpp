@@ -104,7 +104,12 @@ void ATankPawn::Tick(float DeltaTime)
     FVector ForwardVector = GetActorForwardVector();
     FVector MovePosition = CurrentLocation + ForwardVector * CurrentForwardAxisValue * MoveSpeed * DeltaTime;
 
-    SetActorLocation(MovePosition, true);
+    FHitResult* SweepHitResult = nullptr;
+    SetActorLocation(MovePosition, true, SweepHitResult);
+    if (SweepHitResult)
+    {
+        CurrentForwardAxisValue = 0.f;
+    }
 
     // Tank rotation
     CurrentRightAxisValue = FMath::FInterpTo(CurrentRightAxisValue, TargetRightAxisValue, DeltaTime, RotationSmootheness);
