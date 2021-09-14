@@ -2,13 +2,14 @@
 
 
 #include "Cannon.h"
+#include "TankPawn.h"
+#include "Ammobox.h"
 #include <Components/SceneComponent.h>
 #include <Components/StaticMeshComponent.h>
 #include <Components/ArrowComponent.h>
 #include <Engine/Engine.h>
 #include <TimerManager.h>
 #include <Engine/World.h>
-
 #include "Tankogeddon.h"
 #include "Projectile.h"
 #include <DrawDebugHelpers.h>
@@ -75,6 +76,16 @@ bool ACannon::IsReadyToFire() const
 bool ACannon::HasSpecialFire() const
 {
     return bHasSpecialFire;
+}
+
+int ACannon::GetAmmunition()
+{
+    return Ammo;
+}
+
+void ACannon::SetAmmunition(int SavedAmmo)
+{
+    Ammo = SavedAmmo;
 }
 
 // Called when the game starts or when spawned

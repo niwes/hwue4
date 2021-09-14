@@ -49,6 +49,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
     TSubclassOf<ACannon> CannonClass;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Cannon")
+    TSubclassOf<ACannon> SecondCannonClass;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
     float MoveSpeed = 100.f;
     
@@ -81,6 +84,15 @@ public:
     UFUNCTION()
     void SetupCannon(TSubclassOf<ACannon> InCannonClass);
 
+    UFUNCTION()
+    void SetNewCannon(TSubclassOf<ACannon> InCannonClass);
+
+    UFUNCTION()
+    void SwapCannon();
+
+    UFUNCTION()
+    void AddAmmo(int32 AmmoCount);
+
 private:
     float TargetForwardAxisValue = 0.f;
     float CurrentForwardAxisValue = 0.f;
@@ -92,4 +104,6 @@ private:
 
     UPROPERTY()
     ACannon* Cannon;
+
+    TSubclassOf<ACannon> CurrentCannon = CannonClass;
 };
