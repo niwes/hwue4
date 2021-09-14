@@ -60,9 +60,10 @@ public:
 
     void Fire();
     void FireSpecial();
-
     bool IsReadyToFire() const;
     bool HasSpecialFire() const;
+    int32 GetAmmo();
+    void SetAmmo(int SavedAmmunition);
 
 protected:
     virtual void BeginPlay() override;
@@ -70,7 +71,7 @@ protected:
 
     void Reload();
     void Shot();
-
     int32 NumAmmo = 0;
     int32 ShotsLeft = 0;
+
 };

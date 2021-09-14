@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "AmmoBox.h"
 #include "TankPawn.h"
 #include <Components/StaticMeshComponent.h>
 #include <GameFramework/SpringArmComponent.h>
@@ -8,10 +8,10 @@
 #include <Math/UnrealMathUtility.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Components/ArrowComponent.h>
-
 #include "Tankogeddon.h"
 #include "TankPlayerController.h"
 #include "Cannon.h"
+
 
 // Sets default values
 ATankPawn::ATankPawn()
@@ -73,6 +73,40 @@ void ATankPawn::SetupCannon(TSubclassOf<ACannon> InCannonClass)
     Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
+void ATankPawn::SwapCannon()
+{
+    TankController = Cast<ATankPlayerController>(GetController());
+
+    if (CurrentCannon == CannonClass)
+    {
+        CurrentCannon = SecondCannonClass;
+        SetupCannon(SecondCannonClass);
+    }
+    else
+    {
+        CurrentCannon = CannonClass;
+        SetupCannon(CannonClass); 
+    }
+    int32 ammo = Cannon->GetAmmo();
+    Cannon->SetAmmo(ammo);
+}
+
+void ATankPawn::SetNewCannon(TSubclassOf<ACannon> InCannonClass)
+{
+    if (CurrentCannon == CannonClass)
+    {
+        CurrentCannon = InCannonClass;
+        CannonClass = InCannonClass;
+        SetupCannon(CannonClass);
+    }
+    else
+    {
+        CurrentCannon = InCannonClass;
+        SecondCannonClass = InCannonClass;
+        SetupCannon(SecondCannonClass);
+    }
+}
+
 // Called every frame
 void ATankPawn::Tick(float DeltaTime)
 {
@@ -127,3 +161,7 @@ void ATankPawn::FireSpecial()
     }
 }
 
+void ATankPawn::AddAmmo(int32 AmmoCount)
+{
+    Cannon->SetAmmo(Cannon->GetAmmo() + AmmoCount);
+}
